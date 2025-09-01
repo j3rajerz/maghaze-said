@@ -1,0 +1,568 @@
+/* Reset و استایل های پایه */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'IRAN Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --primary-color: #0d47a1; /* Deep Blue */
+    --accent-color: #009688; /* Teal */
+    --warning-color: #ffc107; /* Amber */
+    --danger-color: #f44336; /* Red */
+    --success-color: #4caf50; /* Green */
+    --neutral-gray-light: #f5f5f5;
+    --neutral-gray-medium: #e0e0e0;
+    --neutral-gray-dark: #424242;
+    --light-color: #ecf0f1;
+    --dark-color: #2c3e50;
+    --glass-bg: rgba(255, 255, 255, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    background-color: var(--neutral-gray-light);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--neutral-gray-dark);
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 100%;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* استایل بخش لاگین */
+.login-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 380px;
+    padding: 40px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.login-container h1 {
+    margin-bottom: 30px;
+    color: var(--dark-color);
+    font-size: 28px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid var(--glass-border);
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border 0.3s;
+}
+
+.input-group input:focus {
+    border-color: var(--accent-color);
+    outline: none;
+}
+
+.forgot-password {
+    display: block;
+    text-align: left;
+    margin-bottom: 25px;
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 14px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-login {
+    background-color: var(--primary-color);
+    color: white;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-login:hover {
+    background-color: #253a99;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-signup {
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-signup:hover {
+    background-color: #dde4e6;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* استایل داشبورد اصلی */
+.dashboard {
+    display: none;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.header {
+    background: white;
+    color: var(--dark-color);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--neutral-gray-medium);
+}
+
+.header h1 {
+    font-size: 20px;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info span {
+    margin-right: 15px;
+    font-size: 14px;
+}
+
+.btn-logout {
+    background-color: var(--danger-color);
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.main-content {
+    display: flex;
+    height: calc(100% - 60px);
+    flex-direction: row;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--dark-color);
+    color: white;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar.active {
+    display: block;
+}
+
+.menu-item {
+    padding: 15px 25px;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.menu-item:hover {
+    background-color: #34495e;
+}
+
+.menu-item.active {
+    background-color: var(--primary-color);
+}
+
+.menu-item i {
+    margin-left: 10px;
+}
+
+.content {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.card {
+    background: white;
+    border: 1px solid var(--neutral-gray-medium);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    margin-bottom: 15px;
+    color: var(--dark-color);
+}
+
+.card h2 {
+    margin-bottom: 15px;
+    color: var(--dark-color);
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+}
+
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid var(--neutral-gray-medium);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+    color: var(--dark-color);
+}
+
+.stat-card h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: var(--neutral-gray-dark);
+}
+
+.stat-card .value {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #253a99;
+    transform: translateY(-2px);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: right;
+}
+
+th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--glass-border);
+    border-radius: 5px;
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background-color: var(--success-color);
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 1000;
+}
+
+/* استایل دکمه‌های منو */
+.cobe-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    padding: 0 15px;
+}
+
+.cobe-button {
+    padding: 15px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cobe-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* استایل فرم‌ها */
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-col {
+    flex: 1;
+}
+
+/* استایل مودال */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    color: var(--dark-color);
+}
+
+.close {
+    color: #fff;
+    float: left;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* استایل هشدارها */
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    background: rgba(231, 76, 60, 0.8);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.alert i {
+    margin-left: 10px;
+    font-size: 20px;
+}
+
+/* استایل ریسپانسیو */
+@media (min-width: 768px) {
+    .container {
+        max-width: 1200px;
+    }
+    
+    .main-content {
+        flex-direction: row;
+    }
+    
+    .sidebar {
+        width: 250px;
+        display: block;
+        background-color: var(--dark-color);
+    }
+    
+    .menu-toggle {
+        display: none;
+    }
+    
+    .content {
+        padding: 20px;
+    }
+    
+    .form-row {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 767px) {
+    .menu-toggle {
+        display: block;
+    }
+    
+    .header h1 {
+        font-size: 18px;
+    }
+    
+    .user-info span {
+        display: none;
+    }
+    
+    .stats {
+        flex-direction: column;
+    }
+}
+
+/* استایل اسلایدر تصاویر */
+.slider {
+    position: relative;
+    height: 150px;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+/* استایل برای بخش تنظیمات */
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.setting-item {
+    background: white;
+    border: 1px solid var(--neutral-gray-medium);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: var(--dark-color);
+}
+
+.setting-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.setting-item i {
+    font-size: 30px;
+    margin-bottom: 10px;
+    color: var(--accent-color);
+}

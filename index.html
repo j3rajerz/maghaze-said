@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستم حسابداری تعمیرگاه کولر خودروهای سنگین</title>
+    <!-- فونت ایران سن سریف -->
+    <link rel="stylesheet" href="https://cdn.fontcdn.ir/Font/Persian/IRAN-Sans/IRAN-Sans.css">
+    <!-- آیکون‌های فونت آوسام -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- کتابخانه تاریخ شمسی -->
+    <script src="https://cdn.jsdelivr.net/npm/persian-date@1.1.0/dist/persian-date.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- صفحه ورود -->
+    <div class="container">
+        <div class="login-container" id="loginPage">
+            <h1>ورود به سیستم</h1>
+            <div class="input-group">
+                <label for="username">نام کاربری</label>
+                <input type="text" id="username" placeholder="نام کاربری خود را وارد کنید">
+            </div>
+            <div class="input-group">
+                <label for="password">رمز عبور</label>
+                <input type="password" id="password" placeholder="رمز عبور خود را وارد کنید">
+            </div>
+            <a href="#" class="forgot-password">رمز عبور خود را فراموش کرده‌اید؟</a>
+            <button class="btn btn-login" onclick="login()">ورود</button>
+            <button class="btn btn-signup">ثبت نام</button>
+        </div>
+        
+        <!-- داشبورد اصلی -->
+        <div class="dashboard" id="dashboard">
+            <div class="header">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>حسابداری تعمیرگاه کولر</h1>
+                <div class="user-info">
+                    <span>خوش آمدید، عباس</span>
+                    <button class="btn-logout" onclick="logout()">خروج</button>
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="sidebar" id="sidebar">
+                    <div class="menu-item active" onclick="showSection('dashboard-section')">
+                        <i class="fas fa-chart-line"></i> داشبورد
+                    </div>
+                    <div class="menu-item" onclick="showSection('customers-section')">
+                        <i class="fas fa-users"></i> مشتریان
+                    </div>
+                    <div class="menu-item" onclick="showSection('services-section')">
+                        <i class="fas fa-tools"></i> خدمات
+                    </div>
+                    <div class="menu-item" onclick="showSection('parts-section')">
+                        <i class="fas fa-cog"></i> قطعات و انبار
+                    </div>
+                    <div class="menu-item" onclick="showSection('checks-section')">
+                        <i class="fas fa-money-check"></i> چک‌ها
+                    </div>
+                    <div class="menu-item" onclick="showSection('reports-section')">
+                        <i class="fas fa-chart-pie"></i> گزارشات و آمار
+                    </div>
+                    <div class="menu-item" onclick="showSection('settings-section')">
+                        <i class="fas fa-cogs"></i> تنظیمات
+                    </div>
+                </div>
+                <div class="content">
+                    <!-- بخش داشبورد -->
+                    <div class="section active" id="dashboard-section">
+                        <div class="header-controls">
+                            <h2>داشبورد</h2>
+                            <div class="actions">
+                                <button class="btn-primary" onclick="showModal('new-service-modal')"><i class="fas fa-plus"></i> سرویس جدید</button>
+                                <button class="btn-primary" onclick="showModal('new-customer-modal')"><i class="fas fa-user-plus"></i> مشتری جدید</button>
+                                <button class="btn-primary" onclick="showModal('new-part-modal')"><i class="fas fa-plus"></i> قطعه جدید</button>
+                                <button class="btn-primary" onclick="exportDB()"><i class="fas fa-download"></i> خروجی DB</button>
+                                <button class="btn-primary" onclick="document.getElementById('importDB').click()"><i class="fas fa-upload"></i> ورودی DB</button>
+                            </div>
+                        </div>
+
+                        <div class="stats">
+                            <div class="stat-card">
+                                <h3>درآمد امروز</h3>
+                                <div class="value" id="today-income">۰</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>درآمد این ماه</h3>
+                                <div class="value" id="month-income">۰</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>تعداد خدمات امروز</h3>
+                                <div class="value" id="today-services">۰</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>چک‌های امروز</h3>
+                                <div class="value" id="today-checks">۰</div>
+                            </div>
+                        </div>
+
+                        <div class="charts">
+                            <div class="card">
+                                <h2>درآمد ۳۰ روز گذشته</h2>
+                                <canvas id="revenue-chart"></canvas>
+                            </div>
+                            <div class="card">
+                                <h2>۵ قطعه پرمصرف (این ماه)</h2>
+                                <canvas id="top-parts-chart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="lists">
+                            <div class="card">
+                                <h2>خدمات اخیر (آخرین ۱۰ مورد)</h2>
+                                <table id="recent-services-table">
+                                    <thead>
+                                        <tr>
+                                            <th>مشتری</th>
+                                            <th>تاریخ</th>
+                                            <th>نوع خدمت</th>
+                                            <th>هزینه</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card">
+                                <h2>چک‌های پیش رو (۷ روز آینده)</h2>
+                                <table id="upcoming-checks-table">
+                                    <thead>
+                                        <tr>
+                                            <th>مشتری</th>
+                                            <th>تاریخ سررسید</th>
+                                            <th>مبلغ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- بخش مدیریت مشتریان -->
+                    <div class="section" id="customers-section">
+                        <div class="header-controls">
+                            <h2>مشتریان</h2>
+                            <div class="actions">
+                                <button class="btn-primary" onclick="showModal('new-customer-modal')"><i class="fas fa-user-plus"></i> مشتری جدید</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="table-controls">
+                                <input type="text" placeholder="جستجو..." onkeyup="filterCustomers(this.value)">
+                                <div class="filters">
+                                    <label><input type="checkbox" onchange="filterCustomers()"> دارای بدهی</label>
+                                    <label><input type="checkbox" onchange="filterCustomers()"> سرویس اخیر (۳۰ روز)</label>
+                                </div>
+                            </div>
+                            <table id="customers-table">
+                                <thead>
+                                    <tr>
+                                        <th>نام</th>
+                                        <th>موبایل</th>
+                                        <th>آخرین بازدید</th>
+                                        <th>مجموع هزینه</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- بخش مدیریت خدمات -->
+                    <div class="section" id="services-section">
+                        <h2>مدیریت خدمات</h2>
+                        <button class="btn-primary" onclick="showModal('new-service-modal')">
+                            <i class="fas fa-plus-circle"></i> افزودن خدمت جدید
+                        </button>
+                        
+                        <div class="card">
+                            <h2>لیست خدمات</h2>
+                            <p>هنوز خدمتی ثبت نشده است.</p>
+                        </div>
+                    </div>
+                    <div class="card">
+    <h2>لیست خدمات</h2>
+    <table id="servicesTable">
+        <thead>
+            <tr>
+                <th>مشتری</th>
+                <th>تاریخ</th>
+                <th>نوع خدمت</th>
+                <th>هزینه</th>
+                <th>قطعات</th>
+                <th>پرداخت</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+                    
+                    <!-- بخش مدیریت قطعات -->
+                    <div class="section" id="parts-section">
+                        <h2>مدیریت قطعات و انبار</h2>
+                        <button class="btn-primary" onclick="showModal('new-part-modal')">
+                            <i class="fas fa-plus"></i> افزودن قطعه جدید
+                        </button>
+                        <form onsubmit="event.preventDefault(); savePart(this);">
+                        
+                        <div class="card">
+                            <h2>لیست قطعات</h2>
+                            <p>هنوز قطعه‌ای ثبت نشده است.</p>
+                        </div>
+                    </div>
+                    <div class="card">
+    <h2>لیست قطعات</h2>
+    <table id="partsTable">
+        <thead>
+            <tr>
+                <th>نام قطعه</th>
+                <th>موجودی</th>
+                <th>قیمت</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+                    
+                    <!-- بخش مدیریت مالی -->
+                    <div class="section" id="financial-section">
+                        <h2>مدیریت مالی</h2>
+                        <div class="stats">
+                            <div class="stat-card">
+                                <h3>درآمد کل</h3>
+                                <div class="value">۰ تومان</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>هزینه‌ها</h3>
+                                <div class="value">۰ تومان</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>سود خالص</h3>
+                                <div class="value">۰ تومان</div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h2>تراکنش‌های مالی</h2>
+                            <p>هنوز تراکنشی ثبت نشده است.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- بخش مدیریت چک‌ها -->
+                    <div class="section" id="checks-section">
+                        <h2>مدیریت چک‌ها</h2>
+                        <button class="btn-primary" onclick="showModal('new-check-modal')">
+                            <i class="fas fa-money-check"></i> ثبت چک جدید
+                        </button>
+                        <form onsubmit="event.preventDefault(); saveCheck(this);">
+                        <div class="card">
+    <h2>چک‌های در جریان</h2>
+    <table id="checksTable">
+        <thead>
+            <tr>
+                <th>مشتری</th>
+                <th>مبلغ</th>
+                <th>بانک</th>
+                <th>تاریخ صدور</th>
+                <th>تاریخ سررسید</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+                        <div class="card">
+                            <h2>چک‌های در جریان</h2>
+                            <p>هنوز چکی ثبت نشده است.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- بخش گزارشات و آمار -->
+                    <div class="section" id="reports-section">
+                        <h2>گزارشات و آمار</h2>
+                        <div class="card">
+    <h2>گزارش درآمد</h2>
+    <p id="dailyIncome">درآمد امروز: ۰ تومان</p>
+    <p id="monthlyIncome">درآمد این ماه: ۰ تومان</p>
+</div>
+
+<div class="card">
+    <h2>مشتریان بدهکار</h2>
+    <ul id="debtorsList"></ul>
+</div>
+
+<div class="card">
+    <h2>پرمصرف‌ترین قطعات</h2>
+    <ul id="topPartsList"></ul>
+</div>
+                        
+                        <div class="card">
+                            <h2>گزارش عملکرد</h2>
+                            <p>هنوز اطلاعاتی برای نمایش گزارش وجود ندارد.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- بخش تنظیمات -->
+                    <div class="section" id="settings-section">
+                        <h2>تنظیمات سیستم</h2>
+                        <div class="card">
+    <h2>مدیریت دیتابیس</h2>
+    <button class="btn-primary" onclick="exportDB()">📤 خروجی گرفتن از دیتابیس</button>
+    <input type="file" id="importDB" style="margin-top:10px;" />
+</div>
+                        
+                        <div class="card">
+                            <h2>تنظیمات خدمات</h2>
+                            <p>در این بخش می‌توانید خدمات پیش‌فرض سیستم را مدیریت کنید.</p>
+                            
+                            <div class="settings-grid">
+                                <div class="setting-item" onclick="showModal('add-service-modal')">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <p>افزودن خدمت</p>
+                                </div>
+                                <div class="setting-item" onclick="showModal('edit-service-modal')">
+                                    <i class="fas fa-edit"></i>
+                                    <p>ویرایش خدمت</p>
+                                </div>
+                                <div class="setting-item" onclick="showModal('delete-service-modal')">
+                                    <i class="fas fa-trash-alt"></i>
+                                    <p>حذف خدمت</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+    <h2>مدیریت دیتابیس</h2>
+    <button class="btn-primary" onclick="exportDB()">خروجی گرفتن از دیتابیس</button>
+    <input type="file" id="importDB" style="margin-top:10px;" />
+</div>     
+                        <div class="card">
+                            <h2>تنظیمات عمومی</h2>
+                            <div class="form-group">
+                                <label>نام تعمیرگاه</label>
+                                <input type="text" placeholder="نام تعمیرگاه را وارد کنید">
+                            </div>
+                            <div class="form-group">
+                                <label>شماره تماس</label>
+                                <input type="tel" placeholder="شماره تماس را وارد کنید">
+                            </div>
+                            <div class="form-group">
+                                <label>آدرس</label>
+                                <textarea rows="2" placeholder="آدرس تعمیرگاه را وارد کنید"></textarea>
+                            </div>
+                            <button class="btn-primary">ذخیره تنظیمات</button>
+                        </div>
+                    </div>
+                    
+                    <!-- بخش‌های اضافی برای دکمه‌های Cobe -->
+                    <div class="section" id="daily-report-section">
+                        <h2>گزارش روزانه</h2>
+                        <div class="card">
+                            <h2>گزارش عملکرد امروز - <span id="today-date"></span></h2>
+                            <p>هنوز فعالیتی امروز ثبت نشده است.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section" id="inventory-section">
+                        <h2>مدیریت موجودی انبار</h2>
+                        <div class="card">
+                            <h2>وضعیت انبار</h2>
+                            <p>هنوز قطعه‌ای در انبار ثبت نشده است.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- مودال‌های مختلف -->
+    <div id="new-customer-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('new-customer-modal')">&times;</span>
+            <h2>افزودن مشتری جدید</h2>
+            <form>
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>نام کامل</label>
+                            <input type="text" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>شماره تماس</label>
+                            <input type="tel" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>آدرس</label>
+                    <textarea rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>توضیحات</label>
+                    <textarea rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">ذخیره مشتری</button>
+                <form onsubmit="event.preventDefault(); addCustomer(
+    this.querySelectorAll('input')[0].value,
+    this.querySelectorAll('input')[1].value,
+    this.querySelectorAll('textarea')[0].value,
+    this.querySelectorAll('textarea')[1].value
+); closeModal('new-customer-modal'); showNotification('مشتری با موفقیت ذخیره شد');">
+            </form>
+        </div>
+    </div>
+    
+    <div id="new-service-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('new-service-modal')">&times;</span>
+            <h2>ثبت خدمت جدید</h2>
+            <form onsubmit="event.preventDefault(); saveService(this);">
+            <form>
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>انتخاب مشتری</label>
+                            <select required>
+                                <option value="">لطفا انتخاب کنید</option>
+                                <option>حسین محمدی</option>
+                                <option>رضا احمدی</option>
+                                <option>شرکت باران</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>تاریخ</label>
+                            <input type="text" class="pdate" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>نوع خدمت</label>
+                    <select required>
+                        <option value="">لطفا انتخاب کنید</option>
+                        <option>گازگیری</option>
+                        <option>تعویض کمپرسور</option>
+                        <option>تعویض کندانسور</option>
+                        <option>سرویس کامل</option>
+                        <option value="other">سایر</option>
+                    </select>
+                </div>
+                <div class="form-group" id="custom-service" style="display: none;">
+                    <label>نام خدمت</label>
+                    <input type="text">
+                </div>
+                <div class="form-group">
+                    <label>هزینه خدمت (تومان)</label>
+                    <input type="number" required>
+                </div>
+                <div class="form-group">
+                    <label>قطعات استفاده شده</label>
+                    <select multiple>
+                        <option>کمپرسور کامیون</option>
+                        <option>کندانسور</option>
+                        <option>گاز مبرد R134a</option>
+                        <option>او-ring سایز 10</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>نحوه پرداخت</label>
+                    <select>
+                        <option>نقدی</option>
+                        <option>چک</option>
+                        <option>کارت</option>
+                        <option>اعتبار</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">ذخیره خدمت</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- مودال تنظیمات خدمات -->
+    <div id="add-service-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('add-service-modal')">&times;</span>
+            <h2>افزودن خدمت جدید</h2>
+            <form>
+                <div class="form-group">
+                    <label>نام خدمت</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>هزینه پایه (تومان)</label>
+                    <input type="number" required>
+                </div>
+                <div class="form-group">
+                    <label>مدت زمان تقریبی (دقیقه)</label>
+                    <input type="number">
+                </div>
+                <div class="form-group">
+                    <label>توضیحات</label>
+                    <textarea rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">ذخیره خدمت</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">عملیات با موفقیت انجام شد</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="database.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
